@@ -56,3 +56,6 @@ compile_commands.json
 # CLion
 /.idea
 *.clang-format
+
+# build
+build/*
