@@ -81,7 +81,9 @@ ElaWindow::ElaWindow(QWidget* parent)
     // 主题变更动画
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
-    connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
+    connect(d->_appBar,  &ElaAppBar::themeChangeButtonClicked, this, [=]() {
+        eTheme->setThemeMode(eTheme->getThemeMode() == ElaThemeType::Light ? ElaThemeType::Dark : ElaThemeType::Light);
+    });
     d->_isInitFinished = true;
     setCentralWidget(centralWidget);
     centralWidget->installEventFilter(this);
