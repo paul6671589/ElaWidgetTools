@@ -11,6 +11,7 @@ class QVBoxLayout;
 class ElaText;
 class ElaAppBar;
 class ElaIconButton;
+class ElaToolButton;
 class ElaAppBarPrivate : public QObject
 {
     Q_OBJECT
@@ -32,13 +33,15 @@ public:
 
 private:
     QHBoxLayout* _mainLayout{nullptr};
+    QVBoxLayout* _iconLabelLayout{nullptr};
+    QVBoxLayout* _titleLabelLayout{nullptr};
     ElaAppBarType::ButtonFlags _buttonFlags;
-    ElaIconButton* _routeBackButton{nullptr};
-    ElaIconButton* _navigationButton{nullptr};
-    ElaIconButton* _themeChangeButton{nullptr};
-    ElaIconButton* _stayTopButton{nullptr};
-    ElaIconButton* _minButton{nullptr};
-    ElaIconButton* _maxButton{nullptr};
+    ElaToolButton* _routeBackButton{nullptr};
+    ElaToolButton* _navigationButton{nullptr};
+    ElaToolButton* _themeChangeButton{nullptr};
+    ElaToolButton* _stayTopButton{nullptr};
+    ElaToolButton* _minButton{nullptr};
+    ElaToolButton* _maxButton{nullptr};
     ElaIconButton* _closeButton{nullptr};
     QScreen* _lastScreen{nullptr};
     ElaText* _titleLabel{nullptr};
@@ -46,7 +49,6 @@ private:
     qint64 _currentWinID{0};
     int _lastMinTrackWidth{0};
     quint64 _clickTimer{0};
-    bool _isOriginShow{true};
     int _edges{0};
     int _margins{8};
     bool _isHoverMaxButton{false};

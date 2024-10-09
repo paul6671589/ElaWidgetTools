@@ -18,6 +18,7 @@ public:
     ~ElaContentDialogPrivate();
 
 private:
+    qint64 _currentWinID{0};
     ElaThemeType::ThemeMode _themeMode;
     ElaMaskWidget* _maskWidget{nullptr};
     QWidget* _centralWidget{nullptr};
@@ -29,7 +30,6 @@ private:
     ElaPushButton* _leftButton{nullptr};
     ElaPushButton* _middleButton{nullptr};
     ElaPushButton* _rightButton{nullptr};
-    void _moveToCenter();
     void _doCloseAnimation();
 };
 

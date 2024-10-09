@@ -6,9 +6,10 @@
 #include <QScreen>
 #include <QVBoxLayout>
 
-#include "ElaAppBar.h"
+#include "ElaApplication.h"
 #include "ElaTheme.h"
 #include "private/ElaWidgetPrivate.h"
+Q_TAKEOVER_NATIVEEVENT_CPP(ElaWidget, d_func()->_appBar);
 ElaWidget::ElaWidget(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaWidgetPrivate())
 {
@@ -17,9 +18,6 @@ ElaWidget::ElaWidget(QWidget* parent)
     resize(500, 500); // 默认宽高
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
-    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
@@ -31,7 +29,18 @@ ElaWidget::ElaWidget(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWidget::closeButtonClicked);
 
     // 主题
-    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+        update();
+    });
+
+    d->_isEnableMica = eApp->getIsEnableMica();
+    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
+        d->_isEnableMica = eApp->getIsEnableMica();
+        update();
+    });
+    eApp->syncMica(this);
 }
 
 ElaWidget::~ElaWidget()
@@ -107,13 +116,15 @@ ElaAppBarType::ButtonFlags ElaWidget::getWindowButtonFlags() const
 void ElaWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaWidget);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(Qt::NoPen);
-    d->_windowLinearGradient->setFinalStop(width(), height());
-    painter.setBrush(*d->_windowLinearGradient);
-    painter.drawRect(rect());
-    painter.restore();
+    if (!d->_isEnableMica)
+    {
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
+        painter.drawRect(rect());
+        painter.restore();
+    }
     QWidget::paintEvent(event);
 }
