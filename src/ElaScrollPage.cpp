@@ -143,3 +143,8 @@ void ElaScrollPage::setTitleVisible(bool isVisible)
     Q_D(ElaScrollPage);
     d->_breadcrumbBar->setVisible(isVisible);
 }
+
+void ElaScrollPage::setBreadBarClickIgnore(bool ignore) {
+    Q_D(ElaScrollPage);
+    d->_breadcrumbBar->setBreadBarClickIgnore(ignore);
+}

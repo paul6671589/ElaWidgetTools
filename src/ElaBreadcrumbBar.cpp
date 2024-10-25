@@ -31,17 +31,19 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
     d->_listDelegate = new ElaBreadcrumbBarDelegate(this);
     d->_listView->setItemDelegate(d->_listDelegate);
     connect(d->_listView, &QListView::clicked, this, [=](const QModelIndex& index) {
-        if (d->_pIsAutoRemove)
-        {
-            if (d->_listModel->getBreadcrumbListCount() != 1 && index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
+        if (!_ignore_bread_bar_click) {
+            if (d->_pIsAutoRemove)
+            {
+                if (d->_listModel->getBreadcrumbListCount() != 1 && index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
+                {
+                    Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
+                    d->_listModel->removeBreadcrumb(index.row() / 2 + 1);
+                }
+            }
+            else
             {
                 Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
-                d->_listModel->removeBreadcrumb(index.row() / 2 + 1);
             }
-        }
-        else
-        {
-            Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
         }
     });
     QFont textFont = this->font();

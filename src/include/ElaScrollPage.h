@@ -24,6 +24,7 @@ public:
     void setPageTitleSpacing(int spacing);
     int getPageTitleSpacing() const;
     void setTitleVisible(bool isVisible);
+    void setBreadBarClickIgnore(bool ignore);
 };
 
 #endif // ELASCROLLPAGE_H

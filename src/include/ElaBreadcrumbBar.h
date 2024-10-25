@@ -20,9 +20,13 @@ public:
 
     int getBreadcrumbListCount() const;
     QStringList getBreadcrumbList() const;
+    void setBreadBarClickIgnore(bool ignore) { _ignore_bread_bar_click = ignore; }
 
 Q_SIGNALS:
     Q_SIGNAL void breadcrumbClicked(QString breadcrumb, QStringList lastBreadcrumbList);
+
+private:
+    bool _ignore_bread_bar_click{false};
 };
 
 #endif // ELABREADCRUMBBAR_H
